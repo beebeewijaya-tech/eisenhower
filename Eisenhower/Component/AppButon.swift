@@ -65,7 +65,7 @@ struct AppButton: View {
                 .foregroundStyle(type.textColor)
                 .bold()
                 .frame(maxWidth: .infinity, minHeight: 50)
-                .padding()
+                .padding(.vertical, 8)
                 .background(type.backgroundColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
