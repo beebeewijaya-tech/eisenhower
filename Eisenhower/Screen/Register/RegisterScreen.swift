@@ -62,7 +62,6 @@ struct RegisterScreen: View {
             .padding()
             .padding(.horizontal, 12)
         }
-        .navigationBarBackButtonHidden()
     }
 }
 

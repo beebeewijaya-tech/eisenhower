@@ -38,6 +38,9 @@ class Router {
 struct AppNavigation: View {
     @State private var router = Router()
     
+    // MARK: - ViewModel
+    @StateObject private var authViewModel: AuthViewModel = AuthViewModel()
+    
     var body: some View {
         NavigationStack(path: $router.route) {
             LoginScreen()
@@ -47,11 +50,13 @@ struct AppNavigation: View {
                         LoginScreen()
                     case .register:
                         RegisterScreen()
+                            .navigationBarBackButtonHidden()
                     case .home:
                         HomeScreen()
                     }
                 }
         }
         .environment(router)
+        .environmentObject(authViewModel)
     }
 }
