@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import AlertToast
 
 struct LoginScreen: View {
     // MARK: - Environment
@@ -15,6 +15,10 @@ struct LoginScreen: View {
     // MARK: - State
     @State var email: String = ""
     @State var password: String = ""
+    
+    // MARK: ViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -37,12 +41,14 @@ struct LoginScreen: View {
                 
                 AppInput(text: $email, label: "Email address", placeholder: "youremail@gmail.com", type: .text)
                     .padding(.bottom, 12)
-
+                
                 AppInput(text: $password, label: "Password", placeholder: "•••••••••••••", type: .password)
                     .padding(.bottom, 20)
-
+                
                 AppButton(title: "Log in", type: .primary) {
-                    router.replaceAll(path: .home)
+                    Task {
+                        await authViewModel.login(email: email, password: password)
+                    }
                 }
                 
                 Rectangle()
@@ -61,6 +67,18 @@ struct LoginScreen: View {
             .padding()
             .padding(.horizontal, 12)
         }
+        .toast(isPresenting: $authViewModel.isError, alert: {
+            AlertToast(
+                type: .error(Color("Primary")),
+                title: "Error",
+                subTitle: authViewModel.err
+            )
+        })
+        .toast(isPresenting: $authViewModel.isLoading, alert: {
+            AlertToast(
+                type: .loading,
+            )
+        })
     }
 }
 
@@ -68,4 +86,5 @@ struct LoginScreen: View {
 #Preview {
     LoginScreen()
         .environment(Router())
+        .environmentObject(AuthViewModel())
 }
