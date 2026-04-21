@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct RegisterScreen: View {
+    // MARK: - Environment
+    @Environment(Router.self) private var router
+    
+    // MARK: - State
     @State var name: String = ""
     @State var email: String = ""
     @State var password: String = ""
@@ -41,10 +45,24 @@ struct RegisterScreen: View {
                     .padding(.bottom, 20)
                 
                 AppButton(title: "Create Account", type: .primary)
+                
+                Rectangle()
+                    .fill(Color.black.opacity(0.2))
+                    .frame(height: 1)
+                    .padding(.vertical, 20)
+                
+                Text("Already have an account? Log in")
+                    .font(.caption)
+                    .bold()
+                    .foregroundStyle(Color("Primary"))
+                    .onTapGesture {
+                        router.pop()
+                    }
             }
             .padding()
             .padding(.horizontal, 12)
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

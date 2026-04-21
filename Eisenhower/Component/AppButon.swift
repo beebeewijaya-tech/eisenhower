@@ -54,10 +54,11 @@ enum ButtonType {
 struct AppButton: View {
     var title: String
     var type: ButtonType
+    var action: () -> Void = {}
     
     var body: some View {
         Button {
-            
+            action()
         } label: {
             Text(title)
                 .font(.callout)
