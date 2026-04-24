@@ -79,6 +79,27 @@ struct AppButton: View {
 }
 
 
+struct AppImageButton: View {
+    var image: String
+    var action: () -> Void = {}
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            VStack {
+                Image(systemName: image)
+                    .foregroundStyle(Color("Primary"))
+            }
+            .frame(minWidth: 30, minHeight: 30)
+            .glassEffect()
+        }
+
+    }
+}
+
+
 #Preview {
-    AppButton(title: "Submit", type: .secondary)
+//    AppButton(title: "Submit", type: .secondary)
+    AppImageButton(image: "trash")
 }

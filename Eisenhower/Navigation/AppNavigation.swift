@@ -27,6 +27,7 @@ class Router {
     }
     
     func replaceAll(path: Route) {
+        popToRoot()
         route = [path]
     }
     
@@ -36,27 +37,39 @@ class Router {
 }
 
 struct AppNavigation: View {
+    // MARK: - App Storage
+    @AppStorage("token") var token: String?
+    
     @State private var router = Router()
     
     // MARK: - ViewModel
     @StateObject private var authViewModel: AuthViewModel = AuthViewModel()
+    @StateObject private var taskViewModel: TaskViewModel = TaskViewModel()
+  
     
-    var body: some View {
+   var body: some View {
         NavigationStack(path: $router.route) {
-            LoginScreen()
-                .navigationDestination(for: Route.self) { route in
-                    switch route {
-                    case .login:
-                        LoginScreen()
-                    case .register:
-                        RegisterScreen()
-                            .navigationBarBackButtonHidden()
-                    case .home:
-                        HomeScreen()
+            if token?.isEmpty == false {
+                HomeScreen()
+            } else {
+                LoginScreen()
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .login:
+                            LoginScreen()
+                                .navigationBarBackButtonHidden()
+                        case .register:
+                            RegisterScreen()
+                                .navigationBarBackButtonHidden()
+                        case .home:
+                            HomeScreen()
+                                .navigationBarBackButtonHidden()
+                        }
                     }
-                }
+            }
         }
         .environment(router)
         .environmentObject(authViewModel)
+        .environmentObject(taskViewModel)
     }
 }
