@@ -16,10 +16,23 @@ struct QuadrantItem: Identifiable {
 }
 
 struct QuadrantBox: View {
+    // MARK: - State
+    @State private var isAddPresented: Bool = false
+    @State private var taskTitle: String = ""
+    @State private var taskDescription: String = ""
+    @State private var taskQuadrant: String = ""
+    @State private var taskDeadline: String = ""
+    @State private var taskDate = Date()
+    
+    // MARK: - Property
     var bgColor: Color
     var title: String
     var description: String
+    var quadrant: String
     var tasks: [Task]
+    
+    // MARK: - ViewModel
+    @EnvironmentObject private var taskViewModel: TaskViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -34,7 +47,10 @@ struct QuadrantBox: View {
                         .font(.caption)
                 }
                 Spacer()
-                AppImageButton(image: "plus")
+                AppImageButton(image: "plus") {
+                    taskQuadrant = quadrant
+                    isAddPresented = true
+                }
             }
             .padding(.bottom, 20)
             
@@ -58,6 +74,29 @@ struct QuadrantBox: View {
             x: 0,
             y: 3
         )
+        .addQuadrant(
+            isPresented: $isAddPresented,
+            title: $taskTitle,
+            description: $taskDescription,
+            quadrant: $taskQuadrant,
+            deadline: $taskDeadline,
+            datePicker: $taskDate,
+            quadrantList: taskViewModel.quadrant
+        ) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let deadline = formatter.string(from: taskDate)
+            Swift.Task {
+                await taskViewModel.add(
+                    task: TaskRequest(
+                        title: taskTitle,
+                        description: taskDescription,
+                        deadline: deadline,
+                        quadrant: taskQuadrant
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -66,15 +105,17 @@ struct QuadrantBox: View {
         bgColor: Color("Primary"),
         title: "Do First",
         description: "Urgent and Important",
+        quadrant: "DO_FIRST",
         tasks: [
-        Task(
-            id: UUID(),
-            title: "Tugas Vispro",
-            description: "ALP Vispro android & backend",
-            quadrant: .doFirst,
-            isCompleted: false,
-            userId: "1",
-            deadline: "2026-04-21"
-        )
-    ])
+            Task(
+                id: UUID(),
+                title: "Tugas Vispro",
+                description: "ALP Vispro android & backend",
+                quadrant: .doFirst,
+                isCompleted: false,
+                userId: "1",
+                deadline: "2026-04-21"
+            )
+        ])
+    .environmentObject(TaskViewModel())
 }

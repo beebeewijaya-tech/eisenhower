@@ -11,7 +11,7 @@ enum Quadrant: String, Codable {
     case doFirst = "DO_FIRST"
     case eliminate = "ELIMINATE"
     case delegate = "DELEGATE"
-    case scheduled = "SCHEDULED"
+    case scheduled = "SCHEDULE"
 }
 
 
@@ -22,7 +22,7 @@ struct Task: Codable, Identifiable {
     var quadrant: Quadrant
     var isCompleted: Bool
     var userId: String
-    var deadline: String
+    var deadline: String?
 }
 
 
@@ -30,5 +30,5 @@ struct TaskRequest: Codable {
     var title: String
     var description: String
     var deadline: String
-    var quadrant: Quadrant
+    var quadrant: String
 }

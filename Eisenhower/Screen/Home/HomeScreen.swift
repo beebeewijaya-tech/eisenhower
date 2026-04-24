@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct HomeScreen: View {
     // MARK: - Storage
@@ -19,12 +20,6 @@ struct HomeScreen: View {
     @EnvironmentObject private var taskViewModel: TaskViewModel
     
     // MARK: - State
-    private var quadrant: [QuadrantItem] = [
-        QuadrantItem(name: "Do First", description: "Urgent and Important", color: Color("Secondary"), type: "DO_FIRST"),
-        QuadrantItem(name: "Schedule", description: "Not Urgent and Important", color: Color("Cyan"), type: "SCHEDULED"),
-        QuadrantItem(name: "Delegate", description: "Urgent and Not Important", color: Color.gray, type: "DELEGATE"),
-        QuadrantItem(name: "Eliminate", description: "Not Urgent and Not Important", color: Color("Red"), type: "ELIMINATE")
-    ]
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
@@ -41,12 +36,13 @@ struct HomeScreen: View {
                 ScrollView {
                     VStack {
                         LazyVGrid(columns: columns) {
-                            ForEach(quadrant) { item in
+                            ForEach(taskViewModel.quadrant) { item in
                                 GridRow {
                                     QuadrantBox(
                                         bgColor: item.color,
                                         title: item.name,
                                         description: item.description,
+                                        quadrant: item.type,
                                         tasks: taskViewModel.tasks.filter({$0.quadrant.rawValue == item.type})
                                     )
                                 }
@@ -58,6 +54,7 @@ struct HomeScreen: View {
                 }
             }
         }
+        // MARK: - Toolbar
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Logout", systemImage: "rectangle.portrait.and.arrow.right") {
@@ -65,6 +62,16 @@ struct HomeScreen: View {
                 }
             }
         }
+        .toast(isPresenting: $taskViewModel.isLoading, alert: {
+            AlertToast(type: .loading)
+        })
+        .toast(isPresenting: $taskViewModel.isError, alert: {
+            AlertToast(
+                type: .error(Color("Primary")),
+                title: "Error",
+                subTitle: taskViewModel.err
+            )
+        })
         .onAppear {
             Swift.Task {
                 await taskViewModel.list()

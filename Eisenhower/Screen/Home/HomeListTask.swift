@@ -45,7 +45,7 @@ struct ListTask: View {
                 .font(.caption)
                 .padding(.bottom, 5)
             
-            Text("Deadline: 2026-04-24")
+            Text("Deadline: \(task.deadline ?? "")")
                 .foregroundStyle(bgColor)
                 .font(.system(size: 10))
                 .bold()
