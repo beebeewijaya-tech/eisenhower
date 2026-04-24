@@ -27,8 +27,10 @@ struct Task: Codable, Identifiable {
 
 
 struct TaskRequest: Codable {
+    var id: UUID?
     var title: String
     var description: String
     var deadline: String
     var quadrant: String
+    var isCompleted: Bool?
 }

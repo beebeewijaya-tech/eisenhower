@@ -29,4 +29,14 @@ class TaskRepository {
             throw error
         }
     }
+    
+    func toggle(task: TaskRequest) async throws -> Task {
+        do {
+            let data = try JSONEncoder().encode(task)
+            let res = try await networkService.put(path: "tasks/\(task.id?.uuidString ?? "")", body: data)
+            return try JSONDecoder().decode(Task.self, from: res)
+        } catch {
+            throw error
+        }
+    }
 }
