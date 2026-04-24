@@ -16,8 +16,11 @@ struct LoginScreen: View {
     @State var email: String = ""
     @State var password: String = ""
     
-    // MARK: ViewModel
+    // MARK: - ViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
+    
+    // MARK: - AppStorage
+    @AppStorage("token") var token: String = ""
     
     
     var body: some View {
@@ -46,7 +49,7 @@ struct LoginScreen: View {
                     .padding(.bottom, 20)
                 
                 AppButton(title: "Log in", type: .primary) {
-                    Task {
+                    Swift.Task {
                         await authViewModel.login(email: email, password: password)
                     }
                 }
@@ -79,6 +82,11 @@ struct LoginScreen: View {
                 type: .loading,
             )
         })
+        .onChange(of: authViewModel.result?.token) { _, newValue in
+            if newValue != "" {
+                token = newValue ?? ""
+            }
+        }
     }
 }
 

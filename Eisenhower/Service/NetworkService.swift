@@ -5,7 +5,7 @@
 //  Created by Bee Wijaya on 21/04/26.
 //
 
-import Foundation
+import SwiftUI
 
 enum NetworkError: Error {
     case unauthorized(String)           // 401
@@ -28,14 +28,21 @@ enum NetworkError: Error {
 }
 
 class NetworkService {
+    // MARK: - App Storage
+    @AppStorage("token") var token: String?
+    
+    // MARK: - State
     private var host = "http://localhost:9000"
     
     func get(path: String) async throws -> Data {
         guard let url = URL(string: "\(host)/\(path)") else {
             throw URLError(.badURL)
         }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let tok = token ?? ""
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(tok.trimmingCharacters(in: .whitespacesAndNewlines))", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: request)
         
         if let err = check(data: data, response: response) {
             throw err

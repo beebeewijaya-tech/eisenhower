@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct RegisterScreen: View {
     // MARK: - Environment
@@ -16,6 +17,10 @@ struct RegisterScreen: View {
     @State var email: String = ""
     @State var password: String = ""
     
+    
+    // MARK: - ViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+        
     var body: some View {
         ZStack(alignment: .top) {
             Color("White")
@@ -35,7 +40,7 @@ struct RegisterScreen: View {
                 .padding(.vertical, 30)
                 .padding(.bottom, 20)
                 
-                AppInput(text: $email, label: "Name", placeholder: "Your Name", type: .text)
+                AppInput(text: $name, label: "Name", placeholder: "Your Name", type: .text)
                     .padding(.bottom, 12)
 
                 AppInput(text: $email, label: "Email address", placeholder: "youremail@gmail.com", type: .text)
@@ -44,7 +49,11 @@ struct RegisterScreen: View {
                 AppInput(text: $password, label: "Password", placeholder: "•••••••••••••", type: .password)
                     .padding(.bottom, 20)
                 
-                AppButton(title: "Create Account", type: .primary)
+                AppButton(title: "Create Account", type: .primary) {
+                    Swift.Task {
+                        await authViewModel.register(name: name, email: email, password: password)
+                    }
+                }
                 
                 Rectangle()
                     .fill(Color.black.opacity(0.2))
@@ -61,10 +70,23 @@ struct RegisterScreen: View {
             }
             .padding()
             .padding(.horizontal, 12)
+            .toast(isPresenting: $authViewModel.isError) {
+                AlertToast(
+                    type: .error(Color("Primary")),
+                    title: "Error",
+                    subTitle: authViewModel.err
+                )
+            }
+            .toast(isPresenting: $authViewModel.isLoading) {
+                AlertToast(
+                    type: .loading
+                )
+            }
         }
     }
 }
 
 #Preview {
     RegisterScreen()
+        .environment(Router())
 }
