@@ -19,4 +19,14 @@ class TaskRepository {
             throw error
         }
     }
+    
+    func add(task: TaskRequest) async throws -> Task {
+        do {
+            let data = try JSONEncoder().encode(task)
+            let res = try await networkService.post(path: "tasks", body: data)
+            return try JSONDecoder().decode(Task.self, from: res)
+        } catch {
+            throw error
+        }
+    }
 }

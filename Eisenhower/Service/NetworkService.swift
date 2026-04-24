@@ -56,12 +56,15 @@ class NetworkService {
         guard let url = URL(string: "\(host)/\(path)") else {
             throw URLError(.badURL)
         }
-        
+        let tok = token ?? ""
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = body
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+        if tok != "" {
+            request.setValue("Bearer \(tok.trimmingCharacters(in: .whitespacesAndNewlines))", forHTTPHeaderField: "Authorization")
+        }
+
         let (data, response) = try await URLSession.shared.data(for: request)
         
         if let err = check(data: data, response: response) {
