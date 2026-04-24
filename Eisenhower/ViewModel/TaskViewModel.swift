@@ -80,4 +80,20 @@ class TaskViewModel: ObservableObject {
             err = error.localizedDescription
         }
     }
+    
+    func delete(id: UUID) async {
+        do {
+            _ = try await taskRepository.delete(id: id)
+            tasks = tasks.filter({ $0.id != id })
+        } catch {
+            print("ERROR Task: ", error)
+            isError = true
+            if let errMsg = error as? NetworkError {
+                err = errMsg.message
+                return
+            }
+            
+            err = error.localizedDescription
+        }
+    }
 }

@@ -81,6 +81,7 @@ struct AppButton: View {
 
 struct AppImageButton: View {
     var image: String
+    var width: CGFloat = 30
     var action: () -> Void = {}
     
     var body: some View {
@@ -90,11 +91,12 @@ struct AppImageButton: View {
             VStack {
                 Image(systemName: image)
                     .foregroundStyle(Color("Primary"))
+                    .font(.caption)
             }
-            .frame(minWidth: 30, minHeight: 30)
+            .frame(minWidth: width, minHeight: width)
             .glassEffect()
         }
-
+        .buttonStyle(.plain)
     }
 }
 

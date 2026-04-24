@@ -39,4 +39,13 @@ class TaskRepository {
             throw error
         }
     }
+    
+    func delete(id: UUID) async throws -> Bool {
+        do {
+            let res = try await networkService.delete(path: "tasks/\(id.uuidString)")
+            return true
+        } catch {
+            throw error
+        }
+    }
 }
