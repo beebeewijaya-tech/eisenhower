@@ -57,7 +57,10 @@ struct QuadrantBox: View {
             VStack {
                 List {
                     ForEach(tasks) { task in
-                        ListTask(task: task, bgColor: bgColor) { val, id in
+                        ListTask(
+                            task: task,
+                            bgColor: bgColor
+                        ) { val, task in
                             Swift.Task {
                                 await taskViewModel.toggle(val: val, task: TaskRequest(
                                         id: task.id,
@@ -67,6 +70,10 @@ struct QuadrantBox: View {
                                         quadrant: task.quadrant.rawValue,
                                         isCompleted: val
                                     ))
+                            }
+                        } onDelete: { t in
+                            Swift.Task {
+                                await taskViewModel.delete(id: t.id)
                             }
                         }
                     }

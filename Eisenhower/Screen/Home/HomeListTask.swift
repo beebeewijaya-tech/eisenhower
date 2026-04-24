@@ -28,6 +28,7 @@ struct ListTask: View {
     var task: Task
     var bgColor: Color
     var onToggle: (Bool, Task) -> Void = {_, _ in }
+    var onDelete: (Task) -> Void = {_ in }
     
     var body: some View {
         VStack(alignment: .leading){
@@ -60,8 +61,14 @@ struct ListTask: View {
                 .bold()
                 .strikethrough(task.isCompleted)
         }
+        
         .modifier(ListTaskModifier(bgColor: bgColor, isComplete: task.isCompleted))
         .padding(.bottom, 10)
+        .overlay(alignment: .bottomTrailing) {
+            AppImageButton(image: "trash", width: 25) {
+                onDelete(task)
+            }
+        }
     }
 }
 
