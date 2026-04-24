@@ -57,7 +57,18 @@ struct QuadrantBox: View {
             VStack {
                 List {
                     ForEach(tasks) { task in
-                        ListTask(task: task, bgColor: bgColor)
+                        ListTask(task: task, bgColor: bgColor) { val, id in
+                            Swift.Task {
+                                await taskViewModel.toggle(val: val, task: TaskRequest(
+                                        id: task.id,
+                                        title: task.title,
+                                        description: task.description,
+                                        deadline: task.deadline ?? "",
+                                        quadrant: task.quadrant.rawValue,
+                                        isCompleted: val
+                                    ))
+                            }
+                        }
                     }
                 }
                 .listStyle(.plain)

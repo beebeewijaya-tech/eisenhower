@@ -58,4 +58,26 @@ class TaskViewModel: ObservableObject {
             err = error.localizedDescription
         }
     }
+    
+    func toggle(val: Bool, task: TaskRequest) async {
+        do {
+            _ = try await taskRepository.toggle(task: task)
+            tasks = tasks.map { t in
+                var updated = t
+                if updated.id == task.id {
+                    updated.isCompleted = val
+                }
+                return updated
+            }
+        } catch {
+            print("TOGGLE Task: ", error)
+            isError = true
+            if let errMsg = error as? NetworkError {
+                err = errMsg.message
+                return
+            }
+            
+            err = error.localizedDescription
+        }
+    }
 }

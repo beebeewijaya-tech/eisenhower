@@ -9,6 +9,9 @@ import SwiftUI
 
 
 struct ListTaskModifier: ViewModifier {
+    var bgColor: Color
+    var isComplete: Bool
+
     func body(content: Content) -> some View {
         content
             .listRowInsets(EdgeInsets())
@@ -16,7 +19,7 @@ struct ListTaskModifier: ViewModifier {
             .listRowBackground(Color.clear)
             .padding()
             .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
-            .background(.white.opacity(0.7))
+            .background(isComplete ? bgColor.opacity(0.5) : .white.opacity(0.7))
             .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
@@ -24,17 +27,22 @@ struct ListTaskModifier: ViewModifier {
 struct ListTask: View {
     var task: Task
     var bgColor: Color
+    var onToggle: (Bool, Task) -> Void = {_, _ in }
     
     var body: some View {
         VStack(alignment: .leading){
             HStack(alignment: .top) {
-                Toggle("", isOn: .constant(false))
+                Toggle("", isOn: Binding(
+                    get: { task.isCompleted },
+                    set: { onToggle($0, task) }
+                ))
                     .toggleStyle(AppToggle(bgColor: bgColor))
                 
                 VStack(alignment: .leading) {
                     Text(task.title)
                         .font(.caption)
                         .bold()
+                        .strikethrough(task.isCompleted)
                 }
                 Spacer()
             }
@@ -44,13 +52,15 @@ struct ListTask: View {
                 .foregroundStyle(.gray)
                 .font(.caption)
                 .padding(.bottom, 5)
+                .strikethrough(task.isCompleted)
             
             Text("Deadline: \(task.deadline ?? "")")
                 .foregroundStyle(bgColor)
                 .font(.system(size: 10))
                 .bold()
+                .strikethrough(task.isCompleted)
         }
-        .modifier(ListTaskModifier())
+        .modifier(ListTaskModifier(bgColor: bgColor, isComplete: task.isCompleted))
         .padding(.bottom, 10)
     }
 }
