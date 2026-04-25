@@ -16,12 +16,12 @@ QuadTask is a productivity app that brings the Eisenhower Matrix concept into a 
  
 | Home | Add Task | Generate Plan |
 |:----:|:--------:|:-----------:|
-| <img src="./docs/home.jpeg" width="200"/> | <img src="./docs/addtask.jpeg" width="200"/> | <img src="./docs/promptadd.jpeg" width="200"/> |
+| <img src="./Docs/home.jpeg" width="200"/> | <img src="./Docs/addtask.jpeg" width="200"/> | <img src="./Docs/promptadd.jpeg" width="200"/> |
 
 
 | Login | Register | AI Generate Process |
 |:----:|:--------:|:--------:|
-| <img src="./docs/login.jpeg" width="200"/> | <img src="./docs/register.jpeg" width="200"/> | <img src="./docs/generating.jpeg" width="200"/> |
+| <img src="./Docs/login.jpeg" width="200"/> | <img src="./Docs/register.jpeg" width="200"/> | <img src="./Docs/generating.jpeg" width="200"/> |
 
 
 ## Demo
