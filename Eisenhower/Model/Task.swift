@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import FoundationModels
 
+@Generable
 enum Quadrant: String, Codable {
     case doFirst = "DO_FIRST"
     case eliminate = "ELIMINATE"

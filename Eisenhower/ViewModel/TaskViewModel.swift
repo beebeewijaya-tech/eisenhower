@@ -11,6 +11,7 @@ import Combine
 class TaskViewModel: ObservableObject {
     @Published var tasks: [Task] = []
     @Published var isLoading: Bool = false
+    @Published var isBulkLoading: Bool = false
     @Published var err: String = ""
     @Published var isError: Bool = false
     private var taskRepository: TaskRepository = TaskRepository()
@@ -115,6 +116,32 @@ class TaskViewModel: ObservableObject {
                 err = errMsg.message
                 return
             }
+            err = error.localizedDescription
+        }
+    }
+    
+    func bulkAdd(genTasks: [GeneratedTask]) async {
+        isBulkLoading = true
+        do {
+            for item in genTasks {
+                let res = try await taskRepository.add(task: TaskRequest(
+                    title: item.title,
+                    description: item.description,
+                    deadline: item.deadline,
+                    quadrant: item.quadrant.rawValue
+                ))
+                tasks.append(res)
+            }
+            isBulkLoading = false
+        } catch {
+            print("BULK ADD Task: ", error)
+            isError = true
+            isBulkLoading = false
+            if let errMsg = error as? NetworkError {
+                err = errMsg.message
+                return
+            }
+            
             err = error.localizedDescription
         }
     }

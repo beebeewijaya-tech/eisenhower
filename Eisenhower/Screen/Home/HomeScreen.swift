@@ -18,20 +18,37 @@ struct HomeScreen: View {
     // MARK: - ViewModel
     @EnvironmentObject private var authViewModel: AuthViewModel
     @EnvironmentObject private var taskViewModel: TaskViewModel
+    @EnvironmentObject private var promptViewModel: PromptViewModel
     
     // MARK: - State
+    @State var addAITaskPresented: Bool = false
+    @State var promptText: String = ""
     let columns = [
         GridItem(.flexible()),
         GridItem(.flexible())
     ]
     
     var body: some View {
-        ZStack(alignment: .top) {
+        ZStack(alignment: .bottomTrailing) {
             Color("White")
                 .ignoresSafeArea()
             
             if taskViewModel.isLoading {
                 ProgressView()
+            } else if taskViewModel.isBulkLoading {
+                VStack {
+                    Spacer()
+                    AppAvatar(avatar: "Process")
+                    Text("Eisen currently doing it's \"MAGIC\"")
+                        .multilineTextAlignment(.center)
+                        .font(.title)
+                        .bold()
+                        .padding(.bottom, 10)
+                    Text("Be patience, we are breaking down your tasks")
+                        .font(.caption)
+                        .bold()
+                    Spacer()
+                }
             } else {
                 ScrollView {
                     VStack {
@@ -52,14 +69,30 @@ struct HomeScreen: View {
                     .frame(maxWidth: .infinity)
                     .padding()
                 }
+                AppImageButton(image: "wand.and.sparkles", width: 50, type: .primary) {
+                    addAITaskPresented = true
+                }
+                .padding()
             }
         }
         // MARK: - Toolbar
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Logout", systemImage: "rectangle.portrait.and.arrow.right") {
-                    token = ""
+            if !taskViewModel.isBulkLoading {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Logout", systemImage: "rectangle.portrait.and.arrow.right") {
+                        token = ""
+                    }
                 }
+            }
+        }
+        .addAITaskSheet(isPresented: $addAITaskPresented, text: $promptText, isLoading: promptViewModel.isLoading) {
+            Swift.Task {
+                if promptText.isEmpty {
+                    return
+                }
+                addAITaskPresented = false
+                taskViewModel.isBulkLoading = true
+                await promptViewModel.generate(prompt: promptText)
             }
         }
         .toast(isPresenting: $taskViewModel.isLoading, alert: {
@@ -71,6 +104,18 @@ struct HomeScreen: View {
                 title: "Error",
                 subTitle: taskViewModel.err
             )
+        })
+        .toast(isPresenting: $promptViewModel.isError, alert: {
+            AlertToast(
+                type: .error(Color("Primary")),
+                title: "Error",
+                subTitle: promptViewModel.err
+            )
+        })
+        .onChange(of: promptViewModel.result, { _, newValue in
+            Swift.Task {
+                await taskViewModel.bulkAdd(genTasks: newValue)
+            }
         })
         .onAppear {
             Swift.Task {
@@ -86,4 +131,5 @@ struct HomeScreen: View {
         .environment(Router())
         .environmentObject(AuthViewModel())
         .environmentObject(TaskViewModel())
+        .environmentObject(PromptViewModel())
 }

@@ -45,6 +45,7 @@ struct AppNavigation: View {
     // MARK: - ViewModel
     @StateObject private var authViewModel: AuthViewModel = AuthViewModel()
     @StateObject private var taskViewModel: TaskViewModel = TaskViewModel()
+    @StateObject private var promptViewModel: PromptViewModel = PromptViewModel()
   
     
    var body: some View {
@@ -71,5 +72,6 @@ struct AppNavigation: View {
         .environment(router)
         .environmentObject(authViewModel)
         .environmentObject(taskViewModel)
+        .environmentObject(promptViewModel)
     }
 }
