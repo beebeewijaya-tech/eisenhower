@@ -30,7 +30,7 @@ class TaskRepository {
         }
     }
     
-    func toggle(task: TaskRequest) async throws -> Task {
+    func edit(task: TaskRequest) async throws -> Task {
         do {
             let data = try JSONEncoder().encode(task)
             let res = try await networkService.put(path: "tasks/\(task.id?.uuidString ?? "")", body: data)
@@ -42,7 +42,7 @@ class TaskRepository {
     
     func delete(id: UUID) async throws -> Bool {
         do {
-            let res = try await networkService.delete(path: "tasks/\(id.uuidString)")
+            _ = try await networkService.delete(path: "tasks/\(id.uuidString)")
             return true
         } catch {
             throw error

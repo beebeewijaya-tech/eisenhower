@@ -61,7 +61,7 @@ class TaskViewModel: ObservableObject {
     
     func toggle(val: Bool, task: TaskRequest) async {
         do {
-            _ = try await taskRepository.toggle(task: task)
+            _ = try await taskRepository.edit(task: task)
             tasks = tasks.map { t in
                 var updated = t
                 if updated.id == task.id {
@@ -93,6 +93,28 @@ class TaskViewModel: ObservableObject {
                 return
             }
             
+            err = error.localizedDescription
+        }
+    }
+    
+    
+    func move(id: UUID, quadrant: Quadrant, task: TaskRequest) async {
+        do {
+            _ = try await taskRepository.edit(task: task)
+            tasks = tasks.map({ t in
+                var updated = t
+                if t.id == id {
+                    updated.quadrant = quadrant
+                }
+                return updated
+            })
+        } catch {
+            print("MOVE task: ", error)
+            isError = true
+            if let errMsg = error as? NetworkError {
+                err = errMsg.message
+                return
+            }
             err = error.localizedDescription
         }
     }

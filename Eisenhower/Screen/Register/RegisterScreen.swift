@@ -9,6 +9,9 @@ import SwiftUI
 import AlertToast
 
 struct RegisterScreen: View {
+    // MARK: - AppStorage
+    @AppStorage("token") private var token: String?
+    
     // MARK: - Environment
     @Environment(Router.self) private var router
     
@@ -52,6 +55,8 @@ struct RegisterScreen: View {
                 AppButton(title: "Create Account", type: .primary) {
                     Swift.Task {
                         await authViewModel.register(name: name, email: email, password: password)
+                        
+                        router.replaceAll(path: .login)
                     }
                 }
                 
