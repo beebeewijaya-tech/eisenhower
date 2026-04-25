@@ -32,7 +32,7 @@ class NetworkService {
     @AppStorage("token") var token: String?
     
     // MARK: - State
-    private var host = "http://169.254.231.59:9000"
+    private var host = "http://169.254.130.155:9000"
     
     func get(path: String) async throws -> Data {
         guard let url = URL(string: "\(host)/\(path)") else {
