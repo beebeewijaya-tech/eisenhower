@@ -82,7 +82,16 @@ struct AppButton: View {
 struct AppImageButton: View {
     var image: String
     var width: CGFloat = 30
+    var type: ButtonType = .secondary
     var action: () -> Void = {}
+    
+    func fontSize() -> Font {
+        if width >= 30 {
+            return .body
+        } else {
+            return .caption
+        }
+    }
     
     var body: some View {
         Button {
@@ -90,10 +99,16 @@ struct AppImageButton: View {
         } label: {
             VStack {
                 Image(systemName: image)
-                    .foregroundStyle(Color("Primary"))
-                    .font(.caption)
+                    .foregroundStyle(type.textColor)
+                    .font(fontSize())
             }
             .frame(minWidth: width, minHeight: width)
+            .background(type.backgroundColor)
+            .overlay(
+                Circle()
+                    .stroke(type.borderColor, lineWidth: type.borderWidth)
+            )
+            .clipShape(Circle())
             .glassEffect()
         }
         .buttonStyle(.plain)

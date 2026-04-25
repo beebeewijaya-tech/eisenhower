@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C8502AC22F9CA177001708B9 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = C8502AC12F9CA177001708B9 /* Lottie */; };
 		C8EB28122F9732E8003AEAAF /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = C8EB28112F9732E8003AEAAF /* AlertToast */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8EB28122F9732E8003AEAAF /* AlertToast in Frameworks */,
+				C8502AC22F9CA177001708B9 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = Eisenhower;
 			packageProductDependencies = (
 				C8EB28112F9732E8003AEAAF /* AlertToast */,
+				C8502AC12F9CA177001708B9 /* Lottie */,
 			);
 			productName = Eisenhower;
 			productReference = C8EB27952F966761003AEAAF /* Eisenhower.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C8EB28102F9732E8003AEAAF /* XCRemoteSwiftPackageReference "AlertToast" */,
+				C8502AC02F9CA177001708B9 /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C8EB27962F966761003AEAAF /* Products */;
@@ -260,6 +264,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HK5U3FU2AP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Eisenhower;
@@ -293,6 +298,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = HK5U3FU2AP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Eisenhower;
@@ -343,6 +349,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C8502AC02F9CA177001708B9 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.6.0;
+			};
+		};
 		C8EB28102F9732E8003AEAAF /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elai950/AlertToast";
@@ -354,6 +368,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C8502AC12F9CA177001708B9 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C8502AC02F9CA177001708B9 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
 		C8EB28112F9732E8003AEAAF /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C8EB28102F9732E8003AEAAF /* XCRemoteSwiftPackageReference "AlertToast" */;

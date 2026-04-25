@@ -32,7 +32,7 @@ class NetworkService {
     @AppStorage("token") var token: String?
     
     // MARK: - State
-    private var host = "http://localhost:9000"
+    private var host = "http://169.254.231.59:9000"
     
     func get(path: String) async throws -> Data {
         guard let url = URL(string: "\(host)/\(path)") else {
@@ -123,7 +123,9 @@ class NetworkService {
             let apiError = (try? JSONDecoder().decode(APIError.self, from: data))?.message ?? "Something went wrong"
             switch http.statusCode {
             case 200...299: break
-            case 401: return NetworkError.unauthorized(apiError)
+            case 401:
+                token = ""
+                return NetworkError.unauthorized(apiError)
             case 403: return NetworkError.forbidden(apiError)
             case 404: return NetworkError.notFound(apiError)
             case 500: return NetworkError.serverError(http.statusCode, apiError)

@@ -10,12 +10,15 @@ import SwiftUI
 enum InputField {
     case text
     case password
+    case textarea
     
     @ViewBuilder
     func inputField(_ placeholder: String, text: Binding<String>) -> some View {
         switch self {
         case .text:
             TextField(placeholder, text: text)
+        case .textarea:
+            TextField(placeholder, text: text, axis: .vertical)
         case .password:
             SecureField(placeholder, text: text)
         }
@@ -27,6 +30,7 @@ struct AppInput: View {
     var label: String
     var placeholder: String
     var type: InputField
+    var lineLimit: Int = 5
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -53,6 +57,7 @@ struct AppInput: View {
                     x: 0,
                     y: 4
                 )
+                .lineLimit(lineLimit)
         }
     }
 }
