@@ -40,7 +40,7 @@ class AuthViewModel: ObservableObject {
     func register(name: String, email: String, password: String) async {
         isLoading = true
         do {
-            result = try await repository.register(user: User(name: name, email: email, password: password))
+            _ = try await repository.register(user: User(name: name, email: email, password: password))
             isLoading = false
         } catch {
             isError = true

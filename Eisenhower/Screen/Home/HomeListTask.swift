@@ -69,6 +69,7 @@ struct ListTask: View {
                 onDelete(task)
             }
         }
+        .padding(.bottom, 20)
     }
 }
 

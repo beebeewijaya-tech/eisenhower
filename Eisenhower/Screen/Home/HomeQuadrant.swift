@@ -54,8 +54,8 @@ struct QuadrantBox: View {
             }
             .padding(.bottom, 20)
             
-            VStack {
-                List {
+            ScrollView {
+                LazyVStack {
                     ForEach(tasks) { task in
                         ListTask(
                             task: task,
@@ -76,14 +76,15 @@ struct QuadrantBox: View {
                                 await taskViewModel.delete(id: t.id)
                             }
                         }
+                        .draggable(task.id.uuidString)
                     }
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
             }
+            .scrollIndicators(.hidden)
         }
         .padding()
-        .frame(maxWidth: .infinity, minHeight: 300, alignment: .topLeading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .frame(height: 350)
         .background(bgColor.opacity(0.3))
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(
@@ -113,6 +114,30 @@ struct QuadrantBox: View {
                         quadrant: taskQuadrant
                     )
                 )
+            }
+        }
+        .dropDestination(for: String.self) { droppedId, location in
+            Swift.Task {
+                guard let idString = droppedId.first, let id = UUID(uuidString: idString) else {
+                    return false
+                }
+                guard let q = Quadrant(rawValue: quadrant) else {
+                    return false
+                }
+                let task = taskViewModel.tasks.filter({ $0.id == id }).first ?? nil
+                await taskViewModel.move(
+                    id: id,
+                    quadrant: q,
+                    task: TaskRequest(
+                        id: id,
+                        title: task?.title ?? "",
+                        description: task?.description ?? "",
+                        deadline: task?.deadline ?? "",
+                        quadrant: q.rawValue,
+                        isCompleted: task?.isCompleted
+                    )
+                )
+                return true
             }
         }
     }
